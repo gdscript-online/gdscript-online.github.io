@@ -44,4 +44,5 @@ quality/intended_usage/framebuffer_allocation=1
 quality/intended_usage/framebuffer_allocation.mobile=1
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+environment/default_clear_color=Color( 0.1245, 0.142775, 0.15, 1 )
 environment/default_environment="res://default_env.tres"

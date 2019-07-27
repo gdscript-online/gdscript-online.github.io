@@ -15,3 +15,6 @@ Copyright © 2019 Hugo Locurcio and contributors
 - The [Hack](https://sourcefoundry.org/hack/) font is licensed under
   the Bitstream Vera and MIT licenses, see
   [fonts/LICENSE.Hack.md](fonts/LICENSE.Hack.md) for more information.
+- The [Noto Sans](https://www.google.com/get/noto/) font is licensed under
+  the SIL OFL 1.1, see
+  [fonts/LICENSE.Noto.txt](fonts/LICENSE.Noto.txt) for more information.
