@@ -64,6 +64,7 @@ margin_top = 15.0
 margin_right = -15.0
 margin_bottom = 48.0
 grow_horizontal = 0
+hint_tooltip = "Shortcut: Ctrl + Enter"
 text = "Run"
 script = ExtResource( 3 )
 __meta__ = {
