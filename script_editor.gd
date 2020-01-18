@@ -41,7 +41,7 @@ func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', ar
 
 	{output_panel}.add_text(text)
 """.format({
-		output_panel = "$'/root/Control/HSplitContainer/OutputPanel/RichTextLabel'"
+		output_panel = "$'/root/MainWindow/HSplitContainer/OutputPanel/RichTextLabel'"
 })
 
 # The script shim that will be inserted at the end of the user-provided script
@@ -79,7 +79,7 @@ func _run_button_pressed() -> void:
 	error_label.text = "Script error" if error != OK else ""
 
 	if error == OK:
-		var run_context := script.new()
+		var run_context: Object = script.new()
 		# Instance the script so it can access the scene tree.
 		# This also runs the script's `_init()` and `_ready()` functions
 		get_tree().get_root().add_child(run_context)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://resources/code_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://script_editor.gd" type="Script" id=2]
 [ext_resource path="res://run_button.gd" type="Script" id=3]
 [ext_resource path="res://resources/theme.tres" type="Theme" id=4]
+[ext_resource path="res://main_window.gd" type="Script" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 32.0
@@ -12,10 +13,11 @@ content_margin_top = 24.0
 content_margin_bottom = 24.0
 bg_color = Color( 0.18375, 0.202519, 0.21, 1 )
 
-[node name="Control" type="Control"]
+[node name="MainWindow" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 4 )
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
