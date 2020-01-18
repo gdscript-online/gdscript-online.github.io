@@ -8,7 +8,7 @@ you're using a PC on which you can't run executables downloaded from the Web.
 
 ## License
 
-Copyright © 2019 Hugo Locurcio and contributors
+Copyright © 2019-2020 Hugo Locurcio and contributors
 
 - Unless otherwise specified, files in this repository are licensed under the
   MIT license, see [LICENSE.md](LICENSE.md) for more information.
