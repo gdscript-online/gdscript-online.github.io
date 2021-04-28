@@ -98,6 +98,9 @@ margin_top = 24.0
 margin_right = 579.0
 margin_bottom = 696.0
 custom_fonts/normal_font = ExtResource( 1 )
+custom_colors/selection_color = Color( 0, 0.666667, 1, 0.376471 )
+scroll_following = true
+selection_enabled = true
 
 [node name="EngineVersion" type="Label" parent="."]
 modulate = Color( 1, 1, 1, 0.501961 )
