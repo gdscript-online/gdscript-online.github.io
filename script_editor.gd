@@ -154,3 +154,14 @@ func _run_button_pressed() -> void:
 		get_tree().get_root().add_child(run_context)
 		# Clean up once the script is done running
 		run_context.queue_free()
+
+
+func _gui_input(event: InputEvent) -> void:
+	# TODO: Make it work for multiline selections.
+	if event.is_action_pressed("toggle_comment"):
+		if not get_line(cursor_get_line()).begins_with("#"):
+			# Code is already commented out at the beginning of the line. Uncomment it.
+			set_line(cursor_get_line(), "#%s" % get_line(cursor_get_line()))
+		else:
+			# Code isn't commented out at the beginning of the line. Comment it.
+			set_line(cursor_get_line(), get_line(cursor_get_line()).substr(1))
