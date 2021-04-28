@@ -99,6 +99,7 @@ margin_left = 32.0
 margin_top = 24.0
 margin_right = 579.0
 margin_bottom = 696.0
+focus_mode = 2
 custom_fonts/normal_font = ExtResource( 1 )
 custom_colors/selection_color = Color( 0, 0.666667, 1, 0.376471 )
 scroll_following = true
