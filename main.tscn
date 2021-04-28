@@ -40,6 +40,8 @@ margin_right = 657.0
 margin_bottom = 682.0
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 1 )
+custom_colors/selection_color = Color( 0, 0.666667, 1, 0.25098 )
+custom_colors/current_line_color = Color( 1, 1, 1, 0.0705882 )
 custom_constants/line_spacing = 6
 text = "extends Node
 
