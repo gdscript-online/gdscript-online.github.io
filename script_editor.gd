@@ -29,6 +29,8 @@ const FUNC_REPLACEMENTS = {
 # https://github.com/godotengine/godot/blob/4ea73633047e5b52dee38ffe0b958f60e859d5b7/editor/editor_settings.cpp#L785-L822
 const KEYWORD_COLOR := Color(1.0, 1.0, 0.7)
 const STRING_COLOR := Color(0.94, 0.43, 0.75)
+# Slightly brighter than the default theme to improve readability.
+const COMMENT_COLOR := Color(0.45, 0.45, 0.45)
 
 # All reserved words in GDScript.
 const KEYWORDS := [
@@ -112,6 +114,7 @@ func _ready() -> void:
 
 	add_color_region('"', '"', STRING_COLOR, false)
 	add_color_region("'", "'", STRING_COLOR, false)
+	add_color_region("#", "", COMMENT_COLOR, false)
 
 	# Generate printing functions
 	for print_func in PRINT_FUNCS:
