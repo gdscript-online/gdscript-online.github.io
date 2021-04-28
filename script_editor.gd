@@ -1,13 +1,12 @@
 # Copyright © 2019-2021 Hugo Locurcio and contributors - MIT License
 # See `LICENSE.md` included in the source distribution for details.
-
 extends TextEdit
 
 onready var error_label: Label = $"../ErrorPanel/Label"
 onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
 
 # The printing functions to create
-const print_funcs = {
+const PRINT_FUNCS = {
 	"print": "", # Nothing between arguments, newline at end
 	"prints": " ", # Space between arguments, newline at end
 	"printt": "\\t", # Tab between arguments, newline at end
@@ -15,7 +14,7 @@ const print_funcs = {
 }
 
 # Functions to replace in the script that will be run (see above)
-const func_replacements = {
+const FUNC_REPLACEMENTS = {
 	"print(": "self.print(",
 	"print (": "self.print (",
 	"prints(": "self.prints(",
@@ -105,6 +104,7 @@ func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', ar
 # The script shim that will be inserted at the end of the user-provided script
 var script_shim := ""
 
+
 func _ready() -> void:
 	# Add in the missing bits of syntax highlighting for GDScript.
 	for keyword in KEYWORDS:
@@ -114,12 +114,13 @@ func _ready() -> void:
 	add_color_region("'", "'", STRING_COLOR, false)
 
 	# Generate printing functions
-	for print_func in print_funcs:
+	for print_func in PRINT_FUNCS:
 		script_shim += print_func_template.format({
 				name = print_func,
-				separator = print_funcs[print_func],
+				separator = PRINT_FUNCS[print_func],
 				end_separator = "" if print_func == "printraw" else "\\n",
 		})
+
 
 func _run_button_pressed() -> void:
 	# Clear the Output panel
@@ -128,10 +129,10 @@ func _run_button_pressed() -> void:
 	# Replace `print()` and similar functions with our own so that messages
 	# can be displayed in the output panel
 	var script_text := text
-	for func_replacement in func_replacements:
+	for func_replacement in FUNC_REPLACEMENTS:
 		script_text = script_text.replace(
 				func_replacement,
-				func_replacements[func_replacement]
+				FUNC_REPLACEMENTS[func_replacement]
 		)
 
 	# Append the script shim and load the script

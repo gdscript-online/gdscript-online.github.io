@@ -1,9 +1,9 @@
 # Copyright © 2019-2021 Hugo Locurcio and contributors - MIT License
 # See `LICENSE.md` included in the source distribution for details.
-
 extends Control
 
 onready var engine_version_label := $EngineVersion as Label
+
 
 func _ready() -> void:
 	var version := Engine.get_version_info()

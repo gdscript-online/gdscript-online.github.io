@@ -1,7 +1,7 @@
 # Copyright © 2019-2021 Hugo Locurcio and contributors - MIT License
 # See `LICENSE.md` included in the source distribution for details.
-
 extends Button
+
 
 # The shortcut has to be implemented manually, so that it can block input in the
 # text editor. Otherwise, a line break would be inserted and the shortcut
