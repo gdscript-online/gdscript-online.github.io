@@ -26,6 +26,64 @@ const func_replacements = {
 	"printraw (": "self.printraw (",
 }
 
+# Taken from the Default (Godot 2.x-like) script editor theme.
+# https://github.com/godotengine/godot/blob/4ea73633047e5b52dee38ffe0b958f60e859d5b7/editor/editor_settings.cpp#L785-L822
+const KEYWORD_COLOR := Color(1.0, 1.0, 0.7)
+const STRING_COLOR := Color(0.94, 0.43, 0.75)
+
+# All reserved words in GDScript.
+const KEYWORDS := [
+	# Operators.
+	"and",
+	"in",
+	"not",
+	"or",
+	# Types and values.
+	"false",
+	"float",
+	"int",
+	"bool",
+	"null",
+	"PI",
+	"TAU",
+	"INF",
+	"NAN",
+	"self",
+	"true",
+	"void",
+	# Functions.
+	"as",
+	"assert",
+	"await",
+	"breakpoint",
+	"class",
+	"class_name",
+	"extends",
+	"is",
+	"func",
+	"preload",
+	"signal",
+	"super",
+	"trait",
+	"yield",
+	# Variables.
+	"const",
+	"enum",
+	"static",
+	"var",
+	# Control flow.
+	"break",
+	"continue",
+	"if",
+	"elif",
+	"else",
+	"for",
+	"pass",
+	"return",
+	"match",
+	"while",
+]
+
 # Implement `print()` functions in the script for use with the output panel
 # This must be done because built-in `print()` functions' output cannot be redirected
 var print_func_template := """
@@ -48,6 +106,13 @@ func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', ar
 var script_shim := ""
 
 func _ready() -> void:
+	# Add in the missing bits of syntax highlighting for GDScript.
+	for keyword in KEYWORDS:
+		add_keyword_color(keyword, KEYWORD_COLOR)
+
+	add_color_region('"', '"', STRING_COLOR, false)
+	add_color_region("'", "'", STRING_COLOR, false)
+
 	# Generate printing functions
 	for print_func in print_funcs:
 		script_shim += print_func_template.format({
