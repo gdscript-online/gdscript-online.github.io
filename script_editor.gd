@@ -157,11 +157,14 @@ func _run_button_pressed() -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
-	# TODO: Make it work for multiline selections.
 	if event.is_action_pressed("toggle_comment"):
-		if not get_line(cursor_get_line()).begins_with("#"):
-			# Code is already commented out at the beginning of the line. Uncomment it.
-			set_line(cursor_get_line(), "#%s" % get_line(cursor_get_line()))
-		else:
-			# Code isn't commented out at the beginning of the line. Comment it.
-			set_line(cursor_get_line(), get_line(cursor_get_line()).substr(1))
+		# If no selection is active, toggle comment on the line the cursor is currently on.
+		var from := get_selection_from_line() if is_selection_active() else cursor_get_line()
+		var to := get_selection_to_line() if is_selection_active() else cursor_get_line()
+		for line in range(from, to + 1):
+			if not get_line(line).begins_with("#"):
+				# Code is already commented out at the beginning of the line. Uncomment it.
+				set_line(line, "#%s" % get_line(line))
+			else:
+				# Code isn't commented out at the beginning of the line. Comment it.
+				set_line(line, get_line(line).substr(1))
