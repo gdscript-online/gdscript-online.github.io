@@ -5,6 +5,10 @@
 This decreases the file size and makes it faster to load. Most modules are
 disabled, except `regex` as it may be useful for testing on the go.
 
+Follow the instructions in the
+[Compiling for the Web](https://docs.godotengine.org/en/stable/development/compiling/compiling_for_web.html)
+documentation, and use the SCons flags below during the compilation step.
+
 [Builds deployed on gdscript-online.github.io](https://github.com/gdscript-online/gdscript-online.github.io)
 use the following SCons flags:
 
