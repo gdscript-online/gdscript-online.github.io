@@ -2,9 +2,13 @@
 # See `LICENSE.md` included in the source distribution for details.
 extends TextEdit
 
-onready var error_label: Label = $"../ErrorPanel/Label"
-onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
+signal incoming_word(word)
+signal update_src(word)
 
+onready var error_label: Label = $"../ErrorPanel/Label"
+onready var output_panel: RichTextLabel = $"../../VBoxContainer2/OutputPanel/RichTextLabel"
+var auto_completer:Autocompleter = Autocompleter.new()
+var font_size:int 
 # The printing functions to create
 const PRINT_FUNCS = {
 	"print": "", # Nothing between arguments, newline at end
@@ -100,7 +104,7 @@ func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', ar
 
 	{output_panel}.add_text(text)
 """.format({
-		output_panel = "$'/root/MainWindow/HSplitContainer/OutputPanel/RichTextLabel'"
+		output_panel = "$'/root/MainWindow/HSplitContainer/VBoxContainer2/OutputPanel/RichTextLabel'"
 })
 
 # The script shim that will be inserted at the end of the user-provided script
@@ -108,6 +112,10 @@ var script_shim := ""
 
 
 func _ready() -> void:
+	
+	font_size = get("custom_fonts/font").size
+	
+	auto_completer.initialize(self)
 	# Add in the missing bits of syntax highlighting for GDScript.
 	for keyword in KEYWORDS:
 		add_keyword_color(keyword, KEYWORD_COLOR)
@@ -123,7 +131,6 @@ func _ready() -> void:
 				separator = PRINT_FUNCS[print_func],
 				end_separator = "" if print_func == "printraw" else "\\n",
 		})
-
 
 func _run_button_pressed() -> void:
 	# Clear the Output panel
@@ -142,6 +149,7 @@ func _run_button_pressed() -> void:
 	script_text += script_shim
 	var script := GDScript.new()
 	script.source_code = script_text
+	auto_completer.search(text)
 	var error := script.reload()
 
 	# Display an error message if the script parsing failed
@@ -156,6 +164,7 @@ func _run_button_pressed() -> void:
 		run_context.queue_free()
 
 
+	
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_comment"):
 		# If no selection is active, toggle comment on the line the cursor is currently on.
@@ -168,3 +177,29 @@ func _gui_input(event: InputEvent) -> void:
 			else:
 				# Code isn't commented out at the beginning of the line. Comment it.
 				set_line(line, get_line(line).substr(1))
+
+
+func _on_ScriptEditor_request_completion() -> void:
+	print("requested?")
+	pass # Replace with function body.
+
+func _on_ScriptEditor_text_changed() -> void:
+
+	var text = get_line(cursor_get_line())
+	var split = text.split(" ")
+	var _current_word = split[-1]
+	emit_signal("incoming_word",_current_word)
+	
+	#only send source code sometimes
+	if rand_range(0,1) > .6: return
+	emit_signal("update_src", text)
+	
+	pass # Replace with function body.
+
+
+func _on_ScriptEditor_cursor_changed() -> void:
+	$CursorPos.rect_position = Vector2((8 * cursor_get_column()) + 43, (23 * cursor_get_line() ) + 23 )
+
+
+func get_cursor_pos() -> Vector2:
+	return $CursorPos.rect_position

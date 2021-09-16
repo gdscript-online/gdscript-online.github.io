@@ -1,10 +1,18 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://resources/code_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://script_editor.gd" type="Script" id=2]
 [ext_resource path="res://run_button.gd" type="Script" id=3]
 [ext_resource path="res://resources/theme.tres" type="Theme" id=4]
 [ext_resource path="res://main_window.gd" type="Script" id=5]
+[ext_resource path="res://OptButton.gd" type="Script" id=6]
+[ext_resource path="res://CursorPos.gd" type="Script" id=7]
+
+[sub_resource type="CanvasItemMaterial" id=3]
+blend_mode = 1
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 0.254902 )
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 32.0
@@ -12,6 +20,22 @@ content_margin_right = 32.0
 content_margin_top = 24.0
 content_margin_bottom = 24.0
 bg_color = Color( 0.18375, 0.202519, 0.21, 1 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.52549 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.184314, 0.203922, 0.211765, 0.894118 )
+border_width_left = 4
+border_width_top = 2
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 0.0941176, 0.105882, 0.109804, 1 )
+border_blend = true
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_offset = Vector2( 0.053, 0 )
+anti_aliasing_size = 0.628
 
 [node name="MainWindow" type="Control"]
 anchor_right = 1.0
@@ -35,16 +59,30 @@ margin_right = 657.0
 margin_bottom = 720.0
 custom_constants/separation = 0
 
-[node name="ScriptEditor" type="TextEdit" parent="HSplitContainer/VBoxContainer"]
+[node name="ScriptEditor" type="TextEdit" parent="HSplitContainer/VBoxContainer" groups=[
+"SCR_EDIT",
+]]
 margin_right = 657.0
 margin_bottom = 682.0
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 1 )
 custom_colors/selection_color = Color( 0, 0.666667, 1, 0.25098 )
 custom_colors/current_line_color = Color( 1, 1, 1, 0.0705882 )
 custom_constants/line_spacing = 6
+custom_fonts/font = ExtResource( 1 )
 text = "extends Node
-
+asdasdas
+func _ready():
+	print(\"Hello world!\")
+extends Node
+asdasdas
+func _ready():
+	print(\"Hello world!\")
+extends Node
+asdasdas
+func _ready():
+	print(\"Hello world!\")
+extends Node
+asdasdas
 func _ready():
 	print(\"Hello world!\")
 "
@@ -56,21 +94,23 @@ fold_gutter = true
 highlight_all_occurrences = true
 hiding_enabled = true
 wrap_enabled = true
+minimap_draw = true
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_speed = 0.25
 script = ExtResource( 2 )
 
-[node name="RunButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -100.0
-margin_top = 15.0
-margin_right = -15.0
-margin_bottom = 48.0
-grow_horizontal = 0
-hint_tooltip = "Shortcut: Ctrl + Enter"
-text = "Run"
-script = ExtResource( 3 )
+[node name="CursorPos" type="Control" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+material = SubResource( 3 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -288.5
+margin_top = -318.0
+margin_right = -248.5
+margin_bottom = -278.0
+mouse_filter = 2
+script = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -88,20 +128,61 @@ margin_bottom = 30.0
 custom_colors/font_color = Color( 1, 0.501961, 0.376471, 1 )
 autowrap = true
 
-[node name="OutputPanel" type="PanelContainer" parent="HSplitContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="HSplitContainer"]
 margin_left = 669.0
 margin_right = 1280.0
 margin_bottom = 720.0
-custom_styles/panel = SubResource( 1 )
 
-[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/OutputPanel"]
+[node name="OptButton" type="Button" parent="HSplitContainer/VBoxContainer2"]
+margin_right = 611.0
+margin_bottom = 22.0
+grow_horizontal = 0
+rect_min_size = Vector2( 0, 20 )
+hint_tooltip = "Shortcut: Ctrl + Enter"
+mouse_default_cursor_shape = 2
+custom_colors/font_color = Color( 0.341176, 0.882353, 0.0666667, 1 )
+custom_styles/normal = SubResource( 2 )
+shortcut_in_tooltip = false
+text = "Options"
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RunButton" type="Button" parent="HSplitContainer/VBoxContainer2"]
+margin_top = 26.0
+margin_right = 611.0
+margin_bottom = 48.0
+grow_horizontal = 0
+rect_min_size = Vector2( 0, 20 )
+hint_tooltip = "Shortcut: Ctrl + Enter"
+mouse_default_cursor_shape = 2
+custom_colors/font_color = Color( 0.341176, 0.882353, 0.0666667, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Run"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OutputPanel" type="PanelContainer" parent="HSplitContainer/VBoxContainer2"]
+margin_top = 52.0
+margin_right = 611.0
+margin_bottom = 720.0
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/VBoxContainer2/OutputPanel"]
 margin_left = 32.0
 margin_top = 24.0
 margin_right = 579.0
-margin_bottom = 696.0
+margin_bottom = 644.0
 focus_mode = 2
-custom_fonts/normal_font = ExtResource( 1 )
 custom_colors/selection_color = Color( 0, 0.666667, 1, 0.376471 )
+custom_fonts/normal_font = ExtResource( 1 )
 scroll_following = true
 selection_enabled = true
 
@@ -118,4 +199,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="HSplitContainer/VBoxContainer/ScriptEditor/RunButton" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_run_button_pressed"]
+[node name="SuggestionList" type="ItemList" parent="." groups=[
+"LIST",
+]]
+visible = false
+margin_left = 40.0
+margin_top = 23.0
+margin_right = 215.0
+margin_bottom = 137.0
+rect_clip_content = false
+custom_styles/selected = SubResource( 5 )
+custom_styles/bg = SubResource( 4 )
+items = [ "test", null, false ]
+allow_reselect = true
+auto_height = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="cursor_changed" from="HSplitContainer/VBoxContainer/ScriptEditor" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_on_ScriptEditor_cursor_changed"]
+[connection signal="text_changed" from="HSplitContainer/VBoxContainer/ScriptEditor" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_on_ScriptEditor_text_changed"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer2/OptButton" to="HSplitContainer/VBoxContainer2/OptButton" method="_on_OptButton_pressed"]
+[connection signal="pressed" from="HSplitContainer/VBoxContainer2/RunButton" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_run_button_pressed"]
