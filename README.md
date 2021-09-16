@@ -6,6 +6,11 @@ you're using a PC on which you can't run executables downloaded from the Web.
 
 ## [Try it out](https://gdscript-online.github.io/)
 
+## News
+
+- Added Autocomplete feature
+- UI overhaul
+
 ## License
 
 Copyright © 2019-2021 Hugo Locurcio and contributors

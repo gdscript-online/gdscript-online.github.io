@@ -2,7 +2,7 @@
 # See `LICENSE.md` included in the source distribution for details.
 extends TextEdit
 
-signal incoming_word(word)
+signal incoming_word(word, line_text)
 signal update_src(word)
 
 onready var error_label: Label = $"../ErrorPanel/Label"
@@ -113,8 +113,6 @@ var script_shim := ""
 
 func _ready() -> void:
 	
-	font_size = get("custom_fonts/font").size
-	
 	auto_completer.initialize(self)
 	# Add in the missing bits of syntax highlighting for GDScript.
 	for keyword in KEYWORDS:
@@ -188,10 +186,10 @@ func _on_ScriptEditor_text_changed() -> void:
 	var text = get_line(cursor_get_line())
 	var split = text.split(" ")
 	var _current_word = split[-1]
-	emit_signal("incoming_word",_current_word)
+	emit_signal("incoming_word",_current_word, get_line(cursor_get_line()))
+	
 	
 	#only send source code sometimes
-	if rand_range(0,1) > .6: return
 	emit_signal("update_src", text)
 	
 	pass # Replace with function body.

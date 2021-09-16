@@ -6,6 +6,10 @@ class_name Autocompleter
 var words:PoolStringArray = []
 var list:ItemList = null
 var text_edit:TextEdit = null
+var target_word_to_change:String = ""
+var target_line:String = ""
+var locked_text_edit:bool = false
+
 func initialize(target:Node) -> void:
 	
 	register_api()
@@ -48,30 +52,7 @@ func cursor_pos_system() -> void:
 	text_edit.grab_focus()
 	text_edit.cursor_set_line(0)
 	text_edit.cursor_set_column(0)
-	
-	
-	pass
 
-func on_incoming_word(word:String) -> void:
-	list.clear()
-	var suggestions = _search_similar(word)
-	if suggestions:
-		list.rect_position = text_edit.get_cursor_pos()
-		list.visible = true
-		
-		for i in range(suggestions.size()):
-			list.add_item(suggestions[i])
-			var string:String = suggestions[i]
-			if string.similarity(word) > .5:
-				list.select(i)
-			
-			
-	else:
-		list.visible = false
-	
-	
-	
-	pass
 
 func _search_similar(word:String) -> PoolStringArray:
 	var result:PoolStringArray = []
@@ -96,43 +77,102 @@ func search(string:String) -> PoolStringArray:
 func input(event: InputEvent) -> void:
 	if event is InputEventKey && list.visible:
 		var pos = Vector2(text_edit.cursor_get_column(),text_edit.cursor_get_line())
-		if event.pressed && event.scancode == KEY_UP:
+		if event.pressed && event.scancode == KEY_DOWN:
 			_select_next(1)
-		elif event.pressed && event.scancode == KEY_DOWN:
+		elif event.pressed && event.scancode == KEY_UP:
 			_select_next(-1)
 		elif event.pressed && event.scancode == KEY_ENTER:
-#			text_edit.readonly = true
+			locked_text_edit = true
 			
-			print("whow")
-			text_edit.cursor_set_column(pos.x)
-			text_edit.cursor_set_line(pos.y)
+			
+			list.visible = false
+			# == select word and replace by the suggested one
+			var target_column:int = text_edit.cursor_get_column() - 1
+			text_edit.cursor_set_column(target_column)
+			var word:String = text_edit.get_word_under_cursor()
+			target_column -= word.length()-1
+			text_edit.cursor_set_column(target_column)
+#			print("word under cursor: ", word)
+			text_edit.select(text_edit.cursor_get_line(), target_column, text_edit.cursor_get_line(), target_column + word.length())
+			print("line text is: ", target_line)
+			var result:String = "%s"
+			if target_line == "func": result = "%s():\n\t"
+			print("resulting target line:|", target_line)
+			
+			text_edit.insert_text_at_cursor(result % target_word_to_change)
+			
+			
+			# ==
+			
+			
+			
+			# avoid propagating input to the text edit and only works in the autocomplete list
 			text_edit.get_tree().set_input_as_handled()
-			
+			locked_text_edit = false
 		
 
 func _select_next(value:int):
-	print("selected")
 	var items = list.get_item_count()
+	if not list.get_selected_items(): return
+	var selected:int = list.get_selected_items()[0]
+	print("selected: ", selected)
 	if value > 0:
-		if items + 1 < items:
-			list.select(list.get_selected_items()[0]+1)
+		if selected + 1 < items:
+			list.select(selected+1)
 		else: list.select(0)
 	else:
-		if items - 1 < 0:
-			list.select(items[-1])
+		if selected - 1 < 0:
+			list.select(items-1)
 		else:
-			list.select(list.get_selected_items()[0]-1)
+			list.select(selected-1)
+	list.emit_signal("item_selected",list.get_selected_items()[0])
+	# avoid propagating input to the text edit and only works in the autocomplete list
+	text_edit.get_tree().set_input_as_handled()
+	pass
+
+func _update_target_line_type(line_text:String) -> void:
 	
+	line_text = line_text.replace("\t","")
+	line_text = line_text.split(" ")[0]
+	target_line = line_text
 	pass
 
 func on_update_src(src:String) -> void:
-	print(src)
+	return
+	#TODO: Finish This
+	var reg:RegEx = RegEx.new()
+	reg.compile("extends \\w+")
+	var result = reg.search(src)
+	if !result: return
+	var target_class:String = result.get_string()
+	print("target class: ", target_class)
 	pass
 
 func on_list_item_selected(index:int) -> void:
-	
-	
-	
+	target_word_to_change = list.get_item_text(index)
+	print("targ: ", target_word_to_change)
+	print("what")
 	pass
 
+func on_incoming_word(word:String,line_text:String) -> void:
+	if locked_text_edit: return
+	_update_target_line_type(line_text)
+	list.clear()
+	var suggestions = _search_similar(word)
+	if suggestions:
+		list.rect_position = text_edit.get_cursor_pos()
+		list.visible = true
+		for i in range(suggestions.size()):
+			if word == suggestions[i]: # cover the case where the user already typed the suggestion
+				list.visible = false
+				break
+			list.add_item(suggestions[i])
+			var string:String = suggestions[i]
+			if string.similarity(word) > .5:
+				list.select(i)
+		list.select(0)
+		list.emit_signal("item_selected",0)
+			
+	else:
+		list.visible = false
 
