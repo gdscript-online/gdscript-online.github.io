@@ -8,7 +8,7 @@ signal update_src(word)
 onready var error_label: Label = $"../ErrorPanel/Label"
 onready var output_panel: RichTextLabel = $"../../VBoxContainer2/OutputPanel/RichTextLabel"
 var auto_completer:Autocompleter = Autocompleter.new()
-var font_size:int 
+
 # The printing functions to create
 const PRINT_FUNCS = {
 	"print": "", # Nothing between arguments, newline at end
@@ -35,6 +35,7 @@ const KEYWORD_COLOR := Color(1.0, 1.0, 0.7)
 const STRING_COLOR := Color(0.94, 0.43, 0.75)
 # Slightly brighter than the default theme to improve readability.
 const COMMENT_COLOR := Color(0.45, 0.45, 0.45)
+const CLASS_COLOR := Color.aqua
 
 # All reserved words in GDScript.
 const KEYWORDS := [
@@ -183,13 +184,13 @@ func _on_ScriptEditor_request_completion() -> void:
 
 func _on_ScriptEditor_text_changed() -> void:
 
-	var text = get_line(cursor_get_line())
-	var split = text.split(" ")
+	var line_text = get_line(cursor_get_line())
+	var split = line_text.split(" ")
 	var _current_word = split[-1]
 	emit_signal("incoming_word",_current_word, get_line(cursor_get_line()))
 	
 	
-	#only send source code sometimes
+	
 	emit_signal("update_src", text)
 	
 	pass # Replace with function body.

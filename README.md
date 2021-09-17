@@ -10,7 +10,11 @@ you're using a PC on which you can't run executables downloaded from the Web.
 
 - Added Autocomplete feature
 - UI overhaul
-
+- add color keyword for classes
+- Improved autocomplete
+   - when typing var
+   - when typing extends <class name>
+- functions doesnt show non virtual classes (like `set_physics process`)
 ## License
 
 Copyright © 2019-2021 Hugo Locurcio and contributors

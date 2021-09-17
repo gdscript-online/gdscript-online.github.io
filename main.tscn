@@ -70,19 +70,7 @@ custom_colors/current_line_color = Color( 1, 1, 1, 0.0705882 )
 custom_constants/line_spacing = 6
 custom_fonts/font = ExtResource( 1 )
 text = "extends Node
-asdasdas
-func _ready():
-	print(\"Hello world!\")
-extends Node
-asdasdas
-func _ready():
-	print(\"Hello world!\")
-extends Node
-asdasdas
-func _ready():
-	print(\"Hello world!\")
-extends Node
-asdasdas
+
 func _ready():
 	print(\"Hello world!\")
 "
@@ -213,6 +201,7 @@ custom_styles/bg = SubResource( 4 )
 items = [ "test", null, false ]
 allow_reselect = true
 auto_height = true
+same_column_width = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
