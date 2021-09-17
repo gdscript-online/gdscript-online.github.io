@@ -6,6 +6,14 @@ you're using a PC on which you can't run executables downloaded from the Web.
 
 ## [Try it out](https://gdscript-online.github.io/)
 
+## Limitations
+
+This is only a minimal script editor for quick testing purposes.
+It aims to start up quickly and require few resources.
+
+If you're looking for the full Godot editor running in your browser,
+use the official [Godot Engine Web Editor](https://editor.godotengine.org/).
+
 ## License
 
 Copyright © 2019-2021 Hugo Locurcio and contributors
