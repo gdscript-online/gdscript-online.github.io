@@ -2,7 +2,7 @@ extends Node
 class_name Autocompleter
 
 
-const _target_types:Dictionary = {_EXTENDS = "extends", _VAR = "var"}
+const _target_types:Dictionary = {_EXTENDS = "extends", _VAR = "var", _FUNC = "func"}
 
 var words_anywhere:PoolStringArray = []
 var classes_name:PoolStringArray = []
@@ -156,13 +156,16 @@ func _select_next(value:int):
 
 func _update_target_line_type(line_text:String) -> void:
 	
-	line_text = line_text.replace("\t","")
-	line_text = line_text.split(" ")[0]
+	if "\t" in line_text:
+		line_text = line_text.replace("\t","")
+	if " " in line_text:
+		line_text = line_text.split(" ")[0]
 	target_line = ""
 	for value in _target_types:
 		if _target_types[value] == line_text:
 			target_line = line_text
 			break
+	print("target line is: ", target_line)
 	pass
 
 func on_update_src(src:String) -> void:
