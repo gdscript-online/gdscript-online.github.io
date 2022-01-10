@@ -28,13 +28,15 @@ const FUNC_REPLACEMENTS = {
 # Taken from the Default (Godot 2.x-like) script editor theme.
 # https://github.com/godotengine/godot/blob/4ea73633047e5b52dee38ffe0b958f60e859d5b7/editor/editor_settings.cpp#L785-L822
 const KEYWORD_COLOR := Color(1.0, 1.0, 0.7)
+# More orange to be easier to distinguish.
+const CONTROL_FLOW_KEYWORD_COLOR := Color(1.0, 0.7, 0.7)
 const BASE_TYPE_COLOR := Color(0.64, 1.0, 0.83)
 const ENGINE_TYPE_COLOR := Color(0.51, 0.83, 1.0)
 const STRING_COLOR := Color(0.94, 0.43, 0.75)
 # Slightly brighter than the default theme to improve readability.
 const COMMENT_COLOR := Color(0.45, 0.45, 0.45)
 
-# All reserved words in GDScript (for syntax highlighting).
+# All reserved words in GDScript, minus control flow keywords (for syntax highlighting).
 const KEYWORDS := [
 	# Operators.
 	"and",
@@ -74,7 +76,10 @@ const KEYWORDS := [
 	"enum",
 	"static",
 	"var",
-	# Control flow.
+]
+
+# Control flow keywords (for syntax highlighting).
+const CONTROL_FLOW_KEYWORDS = [
 	"break",
 	"continue",
 	"if",
@@ -141,6 +146,9 @@ func _ready() -> void:
 	# Add in the missing bits of syntax highlighting for GDScript.
 	for keyword in KEYWORDS:
 		add_keyword_color(keyword, KEYWORD_COLOR)
+
+	for keyword in CONTROL_FLOW_KEYWORDS:
+		add_keyword_color(keyword, CONTROL_FLOW_KEYWORD_COLOR)
 
 	for base_type in BASE_TYPES:
 		add_keyword_color(base_type, BASE_TYPE_COLOR)
