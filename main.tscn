@@ -39,10 +39,10 @@ custom_constants/separation = 0
 margin_right = 657.0
 margin_bottom = 682.0
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 1 )
 custom_colors/selection_color = Color( 0, 0.666667, 1, 0.25098 )
 custom_colors/current_line_color = Color( 1, 1, 1, 0.0705882 )
 custom_constants/line_spacing = 6
+custom_fonts/font = ExtResource( 1 )
 text = "extends Node
 
 func _ready():
@@ -100,8 +100,8 @@ margin_top = 24.0
 margin_right = 579.0
 margin_bottom = 696.0
 focus_mode = 2
-custom_fonts/normal_font = ExtResource( 1 )
 custom_colors/selection_color = Color( 0, 0.666667, 1, 0.376471 )
+custom_fonts/normal_font = ExtResource( 1 )
 scroll_following = true
 selection_enabled = true
 

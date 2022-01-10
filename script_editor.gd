@@ -28,11 +28,13 @@ const FUNC_REPLACEMENTS = {
 # Taken from the Default (Godot 2.x-like) script editor theme.
 # https://github.com/godotengine/godot/blob/4ea73633047e5b52dee38ffe0b958f60e859d5b7/editor/editor_settings.cpp#L785-L822
 const KEYWORD_COLOR := Color(1.0, 1.0, 0.7)
+const BASE_TYPE_COLOR := Color(0.64, 1.0, 0.83)
+const ENGINE_TYPE_COLOR := Color(0.51, 0.83, 1.0)
 const STRING_COLOR := Color(0.94, 0.43, 0.75)
 # Slightly brighter than the default theme to improve readability.
 const COMMENT_COLOR := Color(0.45, 0.45, 0.45)
 
-# All reserved words in GDScript.
+# All reserved words in GDScript (for syntax highlighting).
 const KEYWORDS := [
 	# Operators.
 	"and",
@@ -85,6 +87,34 @@ const KEYWORDS := [
 	"while",
 ]
 
+# All base types in Godot (for syntax highlighting).
+const BASE_TYPES = [
+	"null",
+	"String",
+	"Vector2",
+	"Rect2",
+	"Vector3",
+	"Transform2D",
+	"Plane",
+	"Quat",
+	"AABB",
+	"Basis",
+	"Transform",
+	"Color",
+	"NodePath",
+	"RID",
+	"Object",
+	"Dictionary",
+	"Array",
+	"PoolByteArray",
+	"PoolIntArray",
+	"PoolRealArray",
+	"PoolStringArray",
+	"PoolVector2Array",
+	"PoolVector3Array",
+	"PoolColorArray",
+]
+
 # Implement `print()` functions in the script for use with the output panel
 # This must be done because built-in `print()` functions' output cannot be redirected
 var print_func_template := """
@@ -111,6 +141,12 @@ func _ready() -> void:
 	# Add in the missing bits of syntax highlighting for GDScript.
 	for keyword in KEYWORDS:
 		add_keyword_color(keyword, KEYWORD_COLOR)
+
+	for base_type in BASE_TYPES:
+		add_keyword_color(base_type, BASE_TYPE_COLOR)
+
+	for engine_type in ClassDB.get_class_list():
+		add_keyword_color(engine_type, ENGINE_TYPE_COLOR)
 
 	add_color_region('"', '"', STRING_COLOR, false)
 	add_color_region("'", "'", STRING_COLOR, false)
