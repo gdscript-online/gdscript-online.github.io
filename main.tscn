@@ -75,6 +75,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="OpenConsoleOnError" type="CheckBox" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+margin_left = 465.0
+margin_top = 56.0
+margin_right = 641.0
+margin_bottom = 78.0
+pressed = true
+text = "Open Console on Error"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="OutputPanel" type="PanelContainer" parent="HSplitContainer"]
 margin_left = 668.0
 margin_right = 1280.0

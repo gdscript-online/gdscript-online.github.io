@@ -4,6 +4,7 @@ extends TextEdit
 
 onready var error_label: Label = $"../../OutputPanel/ErrorLabel"
 onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
+onready var open_console_on_error: CheckBox = $OpenConsoleOnError
 
 # The printing functions to create.
 const PRINT_FUNCS = {
@@ -198,6 +199,11 @@ func _run_button_pressed() -> void:
 		get_tree().get_root().add_child(run_context)
 		# Clean up once the script is done running.
 		run_context.queue_free()
+	elif open_console_on_error.pressed:
+		if OS.has_feature("JavaScript"):
+			JavaScript.eval("debugger;")
+		else:
+			print("Not opening console on error because the platform doesn't support evaluating JavaScript code.")
 
 
 func _gui_input(event: InputEvent) -> void:
