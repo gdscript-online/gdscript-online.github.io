@@ -9,9 +9,9 @@ func _ready() -> void:
 	var version := Engine.get_version_info()
 	# Mimic the official version numbering.
 	if version.patch >= 1:
-		engine_version_label.text = "Godot %s.%s.%s" % [version.major, version.minor, version.patch]
+		engine_version_label.text = "Godot %s.%s.%s.%s" % [version.major, version.minor, version.patch, version.status]
 	else:
-		engine_version_label.text = "Godot %s.%s" % [version.major, version.minor]
+		engine_version_label.text = "Godot %s.%s.%s" % [version.major, version.minor, version.status]
 
 	# Upscale everything if the display requires it (crude hiDPI support).
 	# This prevents UI elements from being too small on hiDPI displays.

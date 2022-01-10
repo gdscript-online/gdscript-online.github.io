@@ -5,15 +5,15 @@ extends TextEdit
 onready var error_label: Label = $"../ErrorPanel/Label"
 onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
 
-# The printing functions to create
+# The printing functions to create.
 const PRINT_FUNCS = {
-	"print": "", # Nothing between arguments, newline at end
-	"prints": " ", # Space between arguments, newline at end
-	"printt": "\\t", # Tab between arguments, newline at end
-	"printraw": "", # Nothing between arguments, no newline at end
+	"print": "", # Nothing between arguments, newline at end.
+	"prints": " ", # Space between arguments, newline at end.
+	"printt": "\\t", # Tab between arguments, newline at end.
+	"printraw": "", # Nothing between arguments, no newline at end.
 }
 
-# Functions to replace in the script that will be run (see above)
+# Functions to replace in the script that will be run (see above).
 const FUNC_REPLACEMENTS = {
 	"print(": "self.print(",
 	"print (": "self.print (",
@@ -115,8 +115,8 @@ const BASE_TYPES = [
 	"PoolColorArray",
 ]
 
-# Implement `print()` functions in the script for use with the output panel
-# This must be done because built-in `print()` functions' output cannot be redirected
+# Implement `print()` functions in the script for use with the output panel.
+# This must be done because built-in `print()` functions' output cannot be redirected.
 var print_func_template := """
 func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', arg7 = '', arg8 = '', arg9 = '') -> void:
 	# Also call the built-in printing function
@@ -133,7 +133,7 @@ func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', ar
 		output_panel = "$'/root/MainWindow/HSplitContainer/OutputPanel/RichTextLabel'"
 })
 
-# The script shim that will be inserted at the end of the user-provided script
+# The script shim that will be inserted at the end of the user-provided script.
 var script_shim := ""
 
 
@@ -162,11 +162,11 @@ func _ready() -> void:
 
 
 func _run_button_pressed() -> void:
-	# Clear the Output panel
+	# Clear the Output panel.
 	output_panel.text = ""
 
 	# Replace `print()` and similar functions with our own so that messages
-	# can be displayed in the output panel
+	# can be displayed in the output panel.
 	var script_text := text
 	for func_replacement in FUNC_REPLACEMENTS:
 		script_text = script_text.replace(
@@ -174,21 +174,21 @@ func _run_button_pressed() -> void:
 				FUNC_REPLACEMENTS[func_replacement]
 		)
 
-	# Append the script shim and load the script
+	# Append the script shim and load the script.
 	script_text += script_shim
 	var script := GDScript.new()
 	script.source_code = script_text
 	var error := script.reload()
 
-	# Display an error message if the script parsing failed
+	# Display an error message if the script parsing failed.
 	error_label.text = "Script error" if error != OK else ""
 
 	if error == OK:
 		var run_context: Object = script.new()
 		# Instance the script so it can access the scene tree.
-		# This also runs the script's `_init()` and `_ready()` functions
+		# This also runs the script's `_init()` and `_ready()` functions.
 		get_tree().get_root().add_child(run_context)
-		# Clean up once the script is done running
+		# Clean up once the script is done running.
 		run_context.queue_free()
 
 
