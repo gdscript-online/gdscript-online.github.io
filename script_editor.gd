@@ -2,7 +2,7 @@
 # See `LICENSE.md` included in the source distribution for details.
 extends TextEdit
 
-onready var error_label: Label = $"../ErrorPanel/Label"
+onready var error_label: Label = $"../../OutputPanel/ErrorLabel"
 onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
 
 # The printing functions to create.
@@ -189,7 +189,7 @@ func _run_button_pressed() -> void:
 	var error := script.reload()
 
 	# Display an error message if the script parsing failed.
-	error_label.text = "Script error" if error != OK else ""
+	error_label.text = "Parser error in the script (invalid syntax).\nCheck browser console for more information." if error != OK else ""
 
 	if error == OK:
 		var run_context: Object = script.new()
