@@ -122,6 +122,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="text_changed" from="HSplitContainer/VBoxContainer/ScriptEditor" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_on_ScriptEditor_text_changed"]
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/ScriptEditor/RunButton" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_run_button_pressed"]
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/ScriptEditor/ShareButton" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_on_ShareButton_pressed"]
 [connection signal="timeout" from="HSplitContainer/VBoxContainer/ScriptEditor/CopiedTimer" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_on_CopiedTimer_timeout"]
