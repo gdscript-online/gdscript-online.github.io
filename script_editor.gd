@@ -167,7 +167,68 @@ func _ready() -> void:
 				separator = PRINT_FUNCS[print_func],
 				end_separator = "" if print_func == "printraw" else "\\n",
 		})
+	
+	
+	# Load query string, if present
+	var query_gd = get_query_source()
+	if query_gd != null:
+		text = query_gd
 
+func get_query_source():
+	var param = get_query_parameter("gd")
+	if param == null:
+		param = get_query_parameter("gdz")
+		if param == null:
+			return null
+		var base64 := base64url_to_base64(param)
+		var compressed := Marshalls.base64_to_raw(base64)
+		var uncompressed := compressed.decompress_dynamic(1024 * 1024, File.COMPRESSION_GZIP)
+		return uncompressed.get_string_from_utf8()
+	
+	var base64 := base64url_to_base64(param)
+	var uncompressed := Marshalls.base64_to_raw(base64)
+	return uncompressed.get_string_from_utf8()
+
+func set_query_source(source: String):
+	var uncompressed := source.to_utf8()
+	var compressed := uncompressed.compress(File.COMPRESSION_GZIP)
+	
+	if compressed.size() < uncompressed.size():
+		var base64 := Marshalls.raw_to_base64(compressed)
+		var base64url := base64_to_base64url(base64)
+		return set_query_parameter("gdz", base64url, "gd")
+	else:
+		var base64 := Marshalls.raw_to_base64(uncompressed)
+		var base64url := base64_to_base64url(base64)
+		return set_query_parameter("gd", base64url, "gdz")
+
+func base64url_to_base64(base64url: String) -> String:
+	return base64url.replace("-", "+").replace("_", "/").replace(".", "=")
+
+func base64_to_base64url(base64: String) -> String:
+	return base64.replace("+", "-").replace("/", "_").replace("=", ".")
+
+func get_query_parameter(parameter: String):
+	if OS.has_feature('JavaScript'):
+		return JavaScript.eval("""
+			let url = new URL(document.location);
+			url.searchParams.get("%s");
+		""" % [parameter])
+	return null
+
+func set_query_parameter(parameter: String, value: String, unsetParam := ""):
+	if OS.has_feature('JavaScript'):
+		return JavaScript.eval("""
+			let url = new URL(document.location);
+			url.searchParams.set("%s", "%s");
+			let unsetparam = "%s";
+			if (unsetparam !== "") {
+				url.searchParams.delete(unsetparam);
+			}
+			window.history.pushState({}, "", url);
+			url.toString();
+		""" % [parameter, value, unsetParam])
+	return null
 
 func _run_button_pressed() -> void:
 	# Clear the Output panel.
@@ -199,7 +260,6 @@ func _run_button_pressed() -> void:
 		# Clean up once the script is done running.
 		run_context.queue_free()
 
-
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_comment"):
 		# If no selection is active, toggle comment on the line the cursor is currently on.
@@ -212,3 +272,15 @@ func _gui_input(event: InputEvent) -> void:
 			else:
 				# Code isn't commented out at the beginning of the line. Comment it.
 				set_line(line, get_line(line).substr(1))
+
+
+func _on_ShareButton_pressed():
+	var newUrl = set_query_source(text)
+	if newUrl != null:
+		OS.clipboard = newUrl
+		$ShareButton.text = "Copied!"
+		$CopiedTimer.start()
+
+
+func _on_CopiedTimer_timeout():
+	$ShareButton.text = "Share"
