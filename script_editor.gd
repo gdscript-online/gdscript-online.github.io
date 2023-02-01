@@ -141,6 +141,8 @@ func {name}(arg1 = '', arg2 = '', arg3 = '', arg4 = '', arg5 = '', arg6 = '', ar
 # The script shim that will be inserted at the end of the user-provided script.
 var script_shim := ""
 
+# JavaScript event callback for 'hashchange'
+var _on_hashchange_callback
 
 func _ready() -> void:
 	# Add in the missing bits of syntax highlighting for GDScript.
@@ -167,7 +169,14 @@ func _ready() -> void:
 				separator = PRINT_FUNCS[print_func],
 				end_separator = "" if print_func == "printraw" else "\\n",
 		})
-
+	
+	# Load initial URL hash, if present
+	_try_load_url_hash_text()
+	
+	# Subscribe to URL hash changes
+	if OS.has_feature('JavaScript'):
+		_on_hashchange_callback = JavaScript.create_callback(self, "_on_hashchange")
+		JavaScript.get_interface("window").addEventListener("hashchange", _on_hashchange_callback)
 
 func _run_button_pressed() -> void:
 	# Clear the Output panel.
@@ -199,7 +208,6 @@ func _run_button_pressed() -> void:
 		# Clean up once the script is done running.
 		run_context.queue_free()
 
-
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_comment"):
 		# If no selection is active, toggle comment on the line the cursor is currently on.
@@ -212,3 +220,87 @@ func _gui_input(event: InputEvent) -> void:
 			else:
 				# Code isn't commented out at the beginning of the line. Comment it.
 				set_line(line, get_line(line).substr(1))
+
+
+func _on_ShareButton_pressed():
+	var newUrl = _set_url_hash_source(text)
+	if newUrl != null:
+		OS.clipboard = newUrl
+		$ShareButton.text = "Copied!"
+		$CopiedTimer.start()
+
+
+func _on_CopiedTimer_timeout():
+	$ShareButton.text = "Share"
+
+func _try_load_url_hash_text():
+	var query_gd = _get_url_hash_source()
+	if query_gd != null:
+		text = query_gd
+
+func _on_hashchange(_event):
+	print("Hash changed")
+	_try_load_url_hash_text()
+
+func _get_url_hash_source():
+	var param = _get_url_hash()
+	if param == null:
+		print("No hash to load")
+		return null
+	
+	print("Loading hash: #%s" % param)
+	
+	var base64 := _base64url_to_base64(param)
+	var raw := Marshalls.base64_to_raw(base64)
+	
+	if raw.size() > 2 && raw[0] == 0x1F && raw[1] == 0x8B:
+		raw = raw.decompress_dynamic(1024 * 1024, File.COMPRESSION_GZIP)
+	
+	return raw.get_string_from_utf8()
+
+func _set_url_hash_source(source: String):
+	var uncompressed := source.to_utf8()
+	var compressed := uncompressed.compress(File.COMPRESSION_GZIP)
+	var base64 = null
+	
+	if compressed.size() < uncompressed.size():
+		base64 = Marshalls.raw_to_base64(compressed)
+	else:
+		base64 = Marshalls.raw_to_base64(uncompressed)
+	
+	var base64url := _base64_to_base64url(base64)
+	return _set_url_hash(base64url)
+
+func _base64url_to_base64(base64url: String) -> String:
+	var base64 = base64url.replace("-", "+").replace("_", "/")
+	if base64.length() % 4 != 0:
+		base64 += "=".repeat(4 - base64.length() % 4)
+	return base64
+
+func _base64_to_base64url(base64: String) -> String:
+	return base64.replace("+", "-").replace("/", "_").rstrip("=")
+
+func _get_url_hash():
+	if OS.has_feature('JavaScript'):
+		var location = JavaScript.get_interface("location")
+		if location.hash != "":
+			return location.hash.substr(1)
+	return null
+
+func _set_url_hash(value: String):
+	if OS.has_feature('JavaScript'):
+		var location = JavaScript.get_interface("location")
+		print("Setting location.hash (\"%s\") = \"%s\"" % [location.hash, value])
+		if ((location.hash != "" && location.hash.substr(1) != value) ||
+			(location.hash == "" && value != "")):
+				var history = JavaScript.get_interface("history")
+				var url = JavaScript.create_object("URL", location)
+				url.hash = value
+				history.pushState(JavaScript.create_object("Object"), "", url)
+				print("Navigated to: %s" % url.toString())
+				return url.toString()
+	return null
+
+
+func _on_ScriptEditor_text_changed():
+	_set_url_hash("")
