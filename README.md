@@ -16,7 +16,7 @@ use the official [Godot Engine Web Editor](https://editor.godotengine.org/).
 
 ## License
 
-Copyright © 2019-2022 Hugo Locurcio and contributors
+Copyright © 2019-present Hugo Locurcio and contributors
 
 - Unless otherwise specified, files in this repository are licensed under the
   MIT license, see [LICENSE.md](LICENSE.md) for more information.

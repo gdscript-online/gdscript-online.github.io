@@ -77,7 +77,7 @@ margin_top = 15.0
 margin_right = -111.0
 margin_bottom = 48.0
 grow_horizontal = 0
-hint_tooltip = "Shortcut: Ctrl + Enter"
+hint_tooltip = "Copies a link to this website to the clipboard with the current code pre-placed."
 text = "Share"
 
 [node name="CopiedTimer" type="Timer" parent="HSplitContainer/VBoxContainer/ScriptEditor"]

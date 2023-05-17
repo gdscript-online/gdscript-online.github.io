@@ -5,33 +5,37 @@ on:
       - master
 
 env:
-  GODOT_VERSION: 3.4.2
+  GODOT_VERSION: 3.5.2
   EXPORT_NAME: gdscript-online
 
 jobs:
   export-html5:
     name: Export (HTML5)
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
-      image: barichello/godot-ci:3.4.2
+      image: barichello/godot-ci:3.5.2
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3
+
       - name: Setup
         run: |
           mkdir -p ~/.local/share/godot/templates/
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable ~/.local/share/godot/templates/$GODOT_VERSION.stable
+
       - name: Export (HTML5)
         run: |
           mkdir -p dist/
           godot -v --export "HTML5" dist/index.html
+
       - name: Minify files
         run: |
-          wget https://github.com/tdewolff/minify/releases/download/v2.9.15/minify_linux_amd64.tar.gz
+          wget https://github.com/tdewolff/minify/releases/download/v2.12.5/minify_linux_amd64.tar.gz
           tar xf minify_linux_amd64.tar.gz minify
           ./minify --recursive dist --output .
+
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.EXPORT_NAME }}-html5
           path: dist
@@ -41,12 +45,12 @@ jobs:
         run: |
           apt-get update && apt-get install -y rsync
       - name: Deploy to GitHub Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # The branch the action should deploy to.
           BRANCH: gh-pages
           # The folder the action should deploy.
           FOLDER: dist
-          # Artifacts are large, don't keep the branch's history
+          # Artifacts are large; don't keep the branch's history.
           SINGLE_COMMIT: true

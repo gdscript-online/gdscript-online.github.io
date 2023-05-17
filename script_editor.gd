@@ -1,4 +1,4 @@
-# Copyright © 2019-2022 Hugo Locurcio and contributors - MIT License
+# Copyright © 2019-present Hugo Locurcio and contributors - MIT License
 # See `LICENSE.md` included in the source distribution for details.
 extends TextEdit
 
@@ -162,21 +162,24 @@ func _ready() -> void:
 	add_color_region("'", "'", STRING_COLOR, false)
 	add_color_region("#", "", COMMENT_COLOR, false)
 
-	# Generate printing functions
+	# Generate printing functions.
 	for print_func in PRINT_FUNCS:
 		script_shim += print_func_template.format({
 				name = print_func,
 				separator = PRINT_FUNCS[print_func],
 				end_separator = "" if print_func == "printraw" else "\\n",
 		})
-	
-	# Load initial URL hash, if present
+
+	# Load initial URL hash, if present.
 	_try_load_url_hash_text()
-	
-	# Subscribe to URL hash changes
-	if OS.has_feature('JavaScript'):
+
+	# Subscribe to URL hash changes.
+	if OS.has_feature("JavaScript"):
 		_on_hashchange_callback = JavaScript.create_callback(self, "_on_hashchange")
 		JavaScript.get_interface("window").addEventListener("hashchange", _on_hashchange_callback)
+	else:
+		# Share button is only supported on HTML5, as it requires executing JavaScript code.
+		$ShareButton.visible = false
 
 func _run_button_pressed() -> void:
 	# Clear the Output panel.
@@ -222,7 +225,7 @@ func _gui_input(event: InputEvent) -> void:
 				set_line(line, get_line(line).substr(1))
 
 
-func _on_ShareButton_pressed():
+func _on_ShareButton_pressed() -> void:
 	var newUrl = _set_url_hash_source(text)
 	if newUrl != null:
 		OS.clipboard = newUrl
@@ -230,46 +233,51 @@ func _on_ShareButton_pressed():
 		$CopiedTimer.start()
 
 
-func _on_CopiedTimer_timeout():
+func _on_CopiedTimer_timeout() -> void:
 	$ShareButton.text = "Share"
 
-func _try_load_url_hash_text():
+
+func _try_load_url_hash_text() -> void:
 	var query_gd = _get_url_hash_source()
 	if query_gd != null:
 		text = query_gd
 
-func _on_hashchange(_event):
+
+func _on_hashchange(_event) -> void:
 	print("Hash changed")
 	_try_load_url_hash_text()
+
 
 func _get_url_hash_source():
 	var param = _get_url_hash()
 	if param == null:
 		print("No hash to load")
 		return null
-	
+
 	print("Loading hash: #%s" % param)
-	
+
 	var base64 := _base64url_to_base64(param)
 	var raw := Marshalls.base64_to_raw(base64)
-	
+
 	if raw.size() > 2 && raw[0] == 0x1F && raw[1] == 0x8B:
 		raw = raw.decompress_dynamic(1024 * 1024, File.COMPRESSION_GZIP)
-	
+
 	return raw.get_string_from_utf8()
+
 
 func _set_url_hash_source(source: String):
 	var uncompressed := source.to_utf8()
 	var compressed := uncompressed.compress(File.COMPRESSION_GZIP)
 	var base64 = null
-	
+
 	if compressed.size() < uncompressed.size():
 		base64 = Marshalls.raw_to_base64(compressed)
 	else:
 		base64 = Marshalls.raw_to_base64(uncompressed)
-	
+
 	var base64url := _base64_to_base64url(base64)
 	return _set_url_hash(base64url)
+
 
 func _base64url_to_base64(base64url: String) -> String:
 	var base64 = base64url.replace("-", "+").replace("_", "/")
@@ -277,18 +285,23 @@ func _base64url_to_base64(base64url: String) -> String:
 		base64 += "=".repeat(4 - base64.length() % 4)
 	return base64
 
+
 func _base64_to_base64url(base64: String) -> String:
 	return base64.replace("+", "-").replace("/", "_").rstrip("=")
 
+
 func _get_url_hash():
-	if OS.has_feature('JavaScript'):
+	if OS.has_feature("JavaScript"):
 		var location = JavaScript.get_interface("location")
 		if location.hash != "":
 			return location.hash.substr(1)
+
+	push_error("`_get_url_hash()` requires JavaScript code execution, which means it can only work in HTML5. Returning `null`.")
 	return null
 
+
 func _set_url_hash(value: String):
-	if OS.has_feature('JavaScript'):
+	if OS.has_feature("JavaScript"):
 		var location = JavaScript.get_interface("location")
 		print("Setting location.hash (\"%s\") = \"%s\"" % [location.hash, value])
 		if ((location.hash != "" && location.hash.substr(1) != value) ||
@@ -299,8 +312,10 @@ func _set_url_hash(value: String):
 				history.pushState(JavaScript.create_object("Object"), "", url)
 				print("Navigated to: %s" % url.toString())
 				return url.toString()
+
+	push_error("`_set_url_hash()` requires JavaScript code execution, which means it can only work in HTML5. Returning `null`.")
 	return null
 
 
-func _on_ScriptEditor_text_changed():
+func _on_ScriptEditor_text_changed() -> void:
 	_set_url_hash("")
