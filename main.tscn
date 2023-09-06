@@ -1,126 +1,109 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://bb4hpvw0tq6yt"]
 
-[ext_resource path="res://resources/code_font.tres" type="DynamicFont" id=1]
-[ext_resource path="res://script_editor.gd" type="Script" id=2]
-[ext_resource path="res://run_button.gd" type="Script" id=3]
-[ext_resource path="res://resources/theme.tres" type="Theme" id=4]
-[ext_resource path="res://main_window.gd" type="Script" id=5]
+[ext_resource type="Theme" uid="uid://bwuol0nxm8rsj" path="res://resources/theme.tres" id="1_b4qlw"]
+[ext_resource type="Script" path="res://main_window.gd" id="2_cf6o8"]
+[ext_resource type="Script" path="res://script_editor.gd" id="3_g8bjr"]
+[ext_resource type="FontFile" uid="uid://decvm47txmafw" path="res://fonts/noto_sans_regular.ttf" id="4_hv1ml"]
+[ext_resource type="Script" path="res://run_button.gd" id="5_d1ogv"]
 
-[sub_resource type="StyleBoxFlat" id=1]
-content_margin_left = 32.0
-content_margin_right = 32.0
-content_margin_top = 24.0
-content_margin_bottom = 24.0
-bg_color = Color( 0.18375, 0.202519, 0.21, 1 )
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_wdykl"]
+number_color = Color(1, 0.666667, 0.137255, 1)
+symbol_color = Color(1, 1, 1, 1)
+function_color = Color(0.27451, 0.47451, 0.65098, 1)
 
 [node name="MainWindow" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 4 )
-script = ExtResource( 5 )
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_b4qlw")
+script = ExtResource("2_cf6o8")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 split_offset = 640
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
-margin_right = 656.0
-margin_bottom = 720.0
-custom_constants/separation = 0
+layout_mode = 2
 
 [node name="ScriptEditor" type="TextEdit" parent="HSplitContainer/VBoxContainer"]
-margin_right = 656.0
-margin_bottom = 720.0
+layout_mode = 2
 size_flags_vertical = 3
-custom_colors/selection_color = Color( 0, 0.666667, 1, 0.25098 )
-custom_colors/current_line_color = Color( 1, 1, 1, 0.0705882 )
-custom_constants/line_spacing = 6
-custom_fonts/font = ExtResource( 1 )
+theme = ExtResource("1_b4qlw")
 text = "extends Node
 
 func _ready():
-	print(\"Hello world!\")
-"
-highlight_current_line = true
-syntax_highlighting = true
-show_line_numbers = true
-draw_tabs = true
-fold_gutter = true
+	print(\"Hello world!\")"
 highlight_all_occurrences = true
-hiding_enabled = true
-wrap_enabled = true
+highlight_current_line = true
+draw_tabs = true
+syntax_highlighter = SubResource("CodeHighlighter_wdykl")
 caret_blink = true
-caret_blink_speed = 0.5
-script = ExtResource( 2 )
+script = ExtResource("3_g8bjr")
 
 [node name="RunButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -100.0
-margin_top = 15.0
-margin_right = -15.0
-margin_bottom = 48.0
+offset_left = -80.0
+offset_bottom = 33.0
 grow_horizontal = 0
-hint_tooltip = "Shortcut: Ctrl + Enter"
+theme_override_fonts/font = ExtResource("4_hv1ml")
 text = "Run"
-script = ExtResource( 3 )
+script = ExtResource("5_d1ogv")
+metadata/_edit_layout_mode = 1
 
 [node name="ShareButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -196.0
-margin_top = 15.0
-margin_right = -111.0
-margin_bottom = 48.0
+offset_left = -167.0
+offset_right = -87.0
+offset_bottom = 33.0
 grow_horizontal = 0
-hint_tooltip = "Copies a link to this website to the clipboard with the current code pre-placed."
+theme_override_fonts/font = ExtResource("4_hv1ml")
 text = "Share"
+metadata/_edit_layout_mode = 1
 
 [node name="CopiedTimer" type="Timer" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
-one_shot = true
 
 [node name="OutputPanel" type="PanelContainer" parent="HSplitContainer"]
-margin_left = 668.0
-margin_right = 1280.0
-margin_bottom = 720.0
-custom_styles/panel = SubResource( 1 )
+layout_mode = 2
 
 [node name="ErrorLabel" type="Label" parent="HSplitContainer/OutputPanel"]
-margin_left = 32.0
-margin_top = 24.0
-margin_right = 580.0
-margin_bottom = 46.0
+layout_mode = 2
 size_flags_vertical = 0
-custom_colors/font_color = Color( 1, 0.501961, 0.376471, 1 )
-autowrap = true
+theme_override_colors/font_color = Color(0.772549, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_hv1ml")
+clip_text = true
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/OutputPanel"]
-margin_left = 32.0
-margin_top = 24.0
-margin_right = 580.0
-margin_bottom = 696.0
+layout_mode = 2
 focus_mode = 2
-custom_colors/selection_color = Color( 0, 0.666667, 1, 0.376471 )
-custom_fonts/normal_font = ExtResource( 1 )
 scroll_following = true
 selection_enabled = true
 
 [node name="EngineVersion" type="Label" parent="."]
-modulate = Color( 1, 1, 1, 0.501961 )
+modulate = Color(1, 1, 1, 0.501961)
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -208.0
-margin_top = 20.0
-margin_right = -20.0
-margin_bottom = 42.0
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -132.0
+offset_top = 9.0
+offset_right = -15.0
+offset_bottom = 46.0
+grow_horizontal = 0
+metadata/_edit_layout_mode = 1
 
 [connection signal="text_changed" from="HSplitContainer/VBoxContainer/ScriptEditor" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_on_ScriptEditor_text_changed"]
 [connection signal="pressed" from="HSplitContainer/VBoxContainer/ScriptEditor/RunButton" to="HSplitContainer/VBoxContainer/ScriptEditor" method="_run_button_pressed"]

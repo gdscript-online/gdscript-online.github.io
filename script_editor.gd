@@ -2,8 +2,9 @@
 # See `LICENSE.md` included in the source distribution for details.
 extends TextEdit
 
-onready var error_label: Label = $"../../OutputPanel/ErrorLabel"
-onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
+@onready var error_label: Label = $"../../OutputPanel/ErrorLabel"
+@onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
+var ch : CodeHighlighter = self.syntax_highlighter
 
 # The printing functions to create.
 const PRINT_FUNCS = {
@@ -147,20 +148,21 @@ var _on_hashchange_callback
 func _ready() -> void:
 	# Add in the missing bits of syntax highlighting for GDScript.
 	for keyword in KEYWORDS:
-		add_keyword_color(keyword, KEYWORD_COLOR)
+		ch.add_keyword_color(keyword, KEYWORD_COLOR)
 
 	for keyword in CONTROL_FLOW_KEYWORDS:
-		add_keyword_color(keyword, CONTROL_FLOW_KEYWORD_COLOR)
+		ch.add_keyword_color(keyword, CONTROL_FLOW_KEYWORD_COLOR)
 
 	for base_type in BASE_TYPES:
-		add_keyword_color(base_type, BASE_TYPE_COLOR)
+		ch.add_keyword_color(base_type, BASE_TYPE_COLOR)
 
 	for engine_type in ClassDB.get_class_list():
-		add_keyword_color(engine_type, ENGINE_TYPE_COLOR)
+		ch.add_keyword_color(engine_type, ENGINE_TYPE_COLOR)
 
-	add_color_region('"', '"', STRING_COLOR, false)
-	add_color_region("'", "'", STRING_COLOR, false)
-	add_color_region("#", "", COMMENT_COLOR, false)
+	ch.add_color_region('"', '"', STRING_COLOR, false)
+	ch.add_color_region("'", "'", STRING_COLOR, false)
+	ch.add_color_region("#", "", COMMENT_COLOR, false)
+
 
 	# Generate printing functions.
 	for print_func in PRINT_FUNCS:
@@ -175,8 +177,8 @@ func _ready() -> void:
 
 	# Subscribe to URL hash changes.
 	if OS.has_feature("JavaScript"):
-		_on_hashchange_callback = JavaScript.create_callback(self, "_on_hashchange")
-		JavaScript.get_interface("window").addEventListener("hashchange", _on_hashchange_callback)
+		_on_hashchange_callback = JavaScriptBridge.create_callback(_on_hashchange)
+		JavaScriptBridge.get_interface("window").addEventListener("hashchange", _on_hashchange_callback)
 	else:
 		# Share button is only supported on HTML5, as it requires executing JavaScript code.
 		$ShareButton.visible = false
@@ -211,11 +213,12 @@ func _run_button_pressed() -> void:
 		# Clean up once the script is done running.
 		run_context.queue_free()
 
+
 func _gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_comment"):
 		# If no selection is active, toggle comment on the line the cursor is currently on.
-		var from := get_selection_from_line() if is_selection_active() else cursor_get_line()
-		var to := get_selection_to_line() if is_selection_active() else cursor_get_line()
+		var from := get_selection_from_line() if has_selection() else get_caret_line()
+		var to := get_selection_from_line() if has_selection() else get_caret_line()
 		for line in range(from, to + 1):
 			if not get_line(line).begins_with("#"):
 				# Code is already commented out at the beginning of the line. Uncomment it.
@@ -224,18 +227,16 @@ func _gui_input(event: InputEvent) -> void:
 				# Code isn't commented out at the beginning of the line. Comment it.
 				set_line(line, get_line(line).substr(1))
 
-
 func _on_ShareButton_pressed() -> void:
 	var newUrl = _set_url_hash_source(text)
 	if newUrl != null:
-		OS.clipboard = newUrl
+		DisplayServer.clipboard_set(newUrl)
 		$ShareButton.text = "Copied!"
 		$CopiedTimer.start()
 
 
 func _on_CopiedTimer_timeout() -> void:
 	$ShareButton.text = "Share"
-
 
 func _try_load_url_hash_text() -> void:
 	var query_gd = _get_url_hash_source()
@@ -260,14 +261,14 @@ func _get_url_hash_source():
 	var raw := Marshalls.base64_to_raw(base64)
 
 	if raw.size() > 2 && raw[0] == 0x1F && raw[1] == 0x8B:
-		raw = raw.decompress_dynamic(1024 * 1024, File.COMPRESSION_GZIP)
+		raw = raw.decompress_dynamic(1024 * 1024, FileAccess.COMPRESSION_GZIP)
 
 	return raw.get_string_from_utf8()
 
 
 func _set_url_hash_source(source: String):
-	var uncompressed := source.to_utf8()
-	var compressed := uncompressed.compress(File.COMPRESSION_GZIP)
+	var uncompressed := source.to_utf8_buffer()
+	var compressed := uncompressed.compress(FileAccess.COMPRESSION_GZIP)
 	var base64 = null
 
 	if compressed.size() < uncompressed.size():
@@ -292,7 +293,7 @@ func _base64_to_base64url(base64: String) -> String:
 
 func _get_url_hash():
 	if OS.has_feature("JavaScript"):
-		var location = JavaScript.get_interface("location")
+		var location = JavaScriptBridge.get_interface("location")
 		if location.hash != "":
 			return location.hash.substr(1)
 
@@ -302,14 +303,14 @@ func _get_url_hash():
 
 func _set_url_hash(value: String):
 	if OS.has_feature("JavaScript"):
-		var location = JavaScript.get_interface("location")
+		var location = JavaScriptBridge.get_interface("location")
 		print("Setting location.hash (\"%s\") = \"%s\"" % [location.hash, value])
 		if ((location.hash != "" && location.hash.substr(1) != value) ||
 			(location.hash == "" && value != "")):
-				var history = JavaScript.get_interface("history")
-				var url = JavaScript.create_object("URL", location)
+				var history = JavaScriptBridge.get_interface("history")
+				var url = JavaScriptBridge.create_object("URL", location)
 				url.hash = value
-				history.pushState(JavaScript.create_object("Object"), "", url)
+				history.pushState(JavaScriptBridge.create_object("Object"), "", url)
 				print("Navigated to: %s" % url.toString())
 				return url.toString()
 
