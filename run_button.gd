@@ -9,4 +9,4 @@ extends Button
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("run_script"):
 		emit_signal("pressed")
-		get_tree().set_input_as_handled()
+		accept_event()

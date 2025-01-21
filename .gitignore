@@ -1,8 +1,5 @@
 # Imported assets
-.import/
-
-# Logs when editor logging is enabled
-logs/
+.godot/
 
 # Exported files
 dist/

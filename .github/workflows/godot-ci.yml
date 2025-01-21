@@ -5,39 +5,39 @@ on:
       - master
 
 env:
-  GODOT_VERSION: 3.5.2
+  GODOT_VERSION: 4.3
   EXPORT_NAME: gdscript-online
 
 jobs:
-  export-html5:
-    name: Export (HTML5)
-    runs-on: ubuntu-22.04
+  export-web:
+    name: Export (Web)
+    runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:3.5.2
+      image: barichello/godot-ci:4.3
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup
         run: |
-          mkdir -p ~/.local/share/godot/templates/
-          mv /root/.local/share/godot/templates/$GODOT_VERSION.stable ~/.local/share/godot/templates/$GODOT_VERSION.stable
+          mkdir -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/$GODOT_VERSION.stable ~/.local/share/godot/export_templates/$GODOT_VERSION.stable
 
-      - name: Export (HTML5)
+      - name: Export (Web)
         run: |
           mkdir -p dist/
-          godot -v --export "HTML5" dist/index.html
+          godot --headless --export-release "Web" dist/index.html
 
       - name: Minify files
         run: |
-          wget https://github.com/tdewolff/minify/releases/download/v2.12.5/minify_linux_amd64.tar.gz
+          wget https://github.com/tdewolff/minify/releases/download/v2.21.3/minify_linux_amd64.tar.gz
           tar xf minify_linux_amd64.tar.gz minify
           ./minify --recursive dist --output .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.EXPORT_NAME }}-html5
+          name: ${{ env.EXPORT_NAME }}-web
           path: dist
 
       # Installing rsync is needed in order to deploy to GitHub Pages. Without it, the build will fail.
