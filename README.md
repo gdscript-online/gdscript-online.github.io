@@ -20,9 +20,6 @@ Copyright © 2019-present Hugo Locurcio and contributors
 
 - Unless otherwise specified, files in this repository are licensed under the
   MIT license, see [LICENSE.md](LICENSE.md) for more information.
-- The [Hack](https://sourcefoundry.org/hack/) font is licensed under
-  the Bitstream Vera and MIT licenses, see
-  [fonts/LICENSE.Hack.md](fonts/LICENSE.Hack.md) for more information.
-- The [Noto Sans](https://www.google.com/get/noto/) font is licensed under
+- The [JetBrains Mono](https://www.jetbrains.com/lp/mono/) font is licensed under
   the SIL OFL 1.1, see
-  [fonts/LICENSE.Noto.txt](fonts/LICENSE.Noto.txt) for more information.
+  [fonts/LICENSE.JetBrainsMono.txt](fonts/LICENSE.JetBrainsMono.txt) for more information.
