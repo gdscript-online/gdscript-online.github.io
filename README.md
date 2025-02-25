@@ -6,6 +6,9 @@ you're using a PC on which you can't run executables downloaded from the Web.
 
 ## [Try it out](https://gdscript-online.github.io/)
 
+- Godot 4.x **(recommended)**: https://gdscript-online.github.io/
+- Godot 3.x: https://gdscript-online.github.io/3.x/
+
 ## Limitations
 
 This is only a minimal script editor for quick testing purposes.
