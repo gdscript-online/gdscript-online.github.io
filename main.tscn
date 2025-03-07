@@ -1,8 +1,8 @@
 [gd_scene load_steps=14 format=3 uid="uid://dagqnf8p56t5m"]
 
-[ext_resource type="Script" path="res://script_editor.gd" id="2"]
-[ext_resource type="Script" path="res://run_button.gd" id="3"]
-[ext_resource type="Script" path="res://main_window.gd" id="5"]
+[ext_resource type="Script" uid="uid://b2xv1iefplk0y" path="res://script_editor.gd" id="2"]
+[ext_resource type="Script" uid="uid://bmf41nod8cote" path="res://run_button.gd" id="3"]
+[ext_resource type="Script" uid="uid://cf0vn7qinfrq8" path="res://main_window.gd" id="5"]
 [ext_resource type="FontFile" uid="uid://brv5nl3yddlk3" path="res://fonts/jetbrains_mono_regular.woff2" id="6_tdi6c"]
 
 [sub_resource type="FontVariation" id="FontVariation_kaosg"]
