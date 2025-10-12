@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://brv5nl3yddlk3"
-path="res://.godot/imported/jetbrains_mono_regular.woff2-ce39ddb7e4d69f2ce4a0aab20ddada49.fontdata"
+uid="uid://b7pbjl8nq61s0"
+path="res://.godot/imported/jetbrains_mono_bold.woff2-81dbd630c21ec1c82f93481b15f2ad52.fontdata"
 
 [deps]
 
-source_file="res://fonts/jetbrains_mono_regular.woff2"
-dest_files=["res://.godot/imported/jetbrains_mono_regular.woff2-ce39ddb7e4d69f2ce4a0aab20ddada49.fontdata"]
+source_file="res://jetbrains_mono_bold.woff2"
+dest_files=["res://.godot/imported/jetbrains_mono_bold.woff2-81dbd630c21ec1c82f93481b15f2ad52.fontdata"]
 
 [params]
 
@@ -23,7 +23,7 @@ allow_system_fallback=true
 force_autohinter=false
 modulate_color_glyphs=false
 hinting=1
-subpixel_positioning=1
+subpixel_positioning=4
 keep_rounding_remainders=true
 oversampling=0.0
 Fallbacks=null

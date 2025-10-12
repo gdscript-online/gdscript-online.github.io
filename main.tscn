@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dagqnf8p56t5m"]
+[gd_scene load_steps=9 format=3 uid="uid://dagqnf8p56t5m"]
 
 [ext_resource type="Script" uid="uid://b2xv1iefplk0y" path="res://script_editor.gd" id="2"]
 [ext_resource type="Script" uid="uid://bmf41nod8cote" path="res://run_button.gd" id="3"]
@@ -1475,26 +1475,6 @@ content_margin_right = 32.0
 content_margin_bottom = 24.0
 bg_color = Color(0.18375, 0.202519, 0.21, 1)
 
-[sub_resource type="FontVariation" id="FontVariation_0qaae"]
-base_font = ExtResource("6_tdi6c")
-variation_embolden = -0.4
-variation_transform = Transform2D(1, 0.15, 0, 1, 0, 0)
-
-[sub_resource type="FontVariation" id="FontVariation_4sr6h"]
-base_font = ExtResource("6_tdi6c")
-variation_transform = Transform2D(1, 0.3, 0, 1, 0, 0)
-
-[sub_resource type="FontVariation" id="FontVariation_5elgi"]
-base_font = ExtResource("6_tdi6c")
-variation_embolden = 0.75
-variation_transform = Transform2D(1, 0.3, 0, 1, 0, 0)
-
-[sub_resource type="FontVariation" id="FontVariation_grr0j"]
-base_font = ExtResource("6_tdi6c")
-variation_embolden = 0.75
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2dff0"]
-
 [node name="MainWindow" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -1505,9 +1485,12 @@ grow_vertical = 2
 script = ExtResource("5")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 split_offset = 640
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
@@ -1517,8 +1500,8 @@ theme_override_constants/separation = 0
 [node name="ScriptEditor" type="CodeEdit" parent="HSplitContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/current_line_color = Color(1, 1, 1, 0.0705882)
 theme_override_colors/selection_color = Color(0, 0.666667, 1, 0.25098)
+theme_override_colors/current_line_color = Color(1, 1, 1, 0.0705882)
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = SubResource("FontVariation_kaosg")
 theme_override_font_sizes/font_size = 14
@@ -1581,27 +1564,6 @@ one_shot = true
 [node name="OutputPanel" type="PanelContainer" parent="HSplitContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("1")
-
-[node name="ErrorLabel" type="Label" parent="HSplitContainer/OutputPanel"]
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_colors/font_color = Color(1, 0.501961, 0.376471, 1)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/OutputPanel"]
-layout_mode = 2
-focus_mode = 2
-theme_override_colors/selection_color = Color(0, 0.666667, 1, 0.376471)
-theme_override_constants/line_separation = 2
-theme_override_fonts/normal_font = ExtResource("6_tdi6c")
-theme_override_fonts/mono_font = SubResource("FontVariation_0qaae")
-theme_override_fonts/italics_font = SubResource("FontVariation_4sr6h")
-theme_override_fonts/bold_italics_font = SubResource("FontVariation_5elgi")
-theme_override_fonts/bold_font = SubResource("FontVariation_grr0j")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_2dff0")
-bbcode_enabled = true
-scroll_following = true
-context_menu_enabled = true
-selection_enabled = true
 
 [node name="EngineVersion" type="Label" parent="."]
 modulate = Color(1, 1, 1, 0.501961)
