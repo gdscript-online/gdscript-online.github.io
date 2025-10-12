@@ -5,8 +5,6 @@ extends TextEdit
 # Syntax highlighting colors are taken from the "Godot 2" script editor theme.
 # https://github.com/godotengine/godot/blob/1b7b009674e05b566be11a5377b935f5d3d6c0ee/editor/editor_settings.cpp#L1043-L1083
 
-@onready var error_label: Label = $"../../OutputPanel/ErrorLabel"
-@onready var output_panel: RichTextLabel = $"../../OutputPanel/RichTextLabel"
 
 # The printing functions to create.
 const PRINT_FUNCS = {
@@ -46,8 +44,6 @@ func {name}(arg1: Variant = '', arg2: Variant = '', arg3: Variant = '', arg4: Va
 
 	if {escape_bbcode}:
 		text = text.replace("[", "[lb]")
-
-	{output_panel}.append_text(text)
 """.format({
 		output_panel = "$'/root/MainWindow/HSplitContainer/OutputPanel/RichTextLabel'"
 })
@@ -87,8 +83,6 @@ func _ready() -> void:
 
 
 func _run_button_pressed() -> void:
-	output_panel.clear()
-
 	# Replace `print()` and similar functions with our own so that messages
 	# can be displayed in the output panel.
 	var script_text := text
@@ -105,8 +99,6 @@ func _run_button_pressed() -> void:
 	var error := script.reload()
 
 	# Display an error message if the script parsing failed.
-	error_label.text = "Parser error in the script (invalid syntax).\nCheck browser console for more information." if error != OK else ""
-
 	if error == OK:
 		var run_context: Object = script.new()
 		# Instance the script so it can access the scene tree.
@@ -215,7 +207,6 @@ func _get_url_hash() -> Variant:
 
 		return null
 	else:
-		push_warning("`_get_url_hash()` requires JavaScript code execution, which means it can only work on the web platform. Returning `null`.")
 		return null
 
 
@@ -231,7 +222,6 @@ func _set_url_hash(value: String) -> Variant:
 
 		return null
 	else:
-		push_warning("`_set_url_hash()` requires JavaScript code execution, which means it can only work on the web platform. Returning `null`.")
 		return null
 
 
