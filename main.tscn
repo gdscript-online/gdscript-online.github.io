@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dagqnf8p56t5m"]
+[gd_scene format=3 uid="uid://dagqnf8p56t5m"]
 
 [ext_resource type="Script" uid="uid://b2xv1iefplk0y" path="res://script_editor.gd" id="2"]
 [ext_resource type="Script" uid="uid://bmf41nod8cote" path="res://run_button.gd" id="3"]
@@ -17,6 +17,8 @@ content_margin_top = 16.0
 content_margin_right = 16.0
 content_margin_bottom = 16.0
 bg_color = Color(0.12549, 0.141176, 0.14902, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1bvp3"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_kobpu"]
 number_color = Color(0.92, 0.58, 0.2, 1)
@@ -1495,7 +1497,7 @@ variation_transform = Transform2D(1, 0.15, 0, 1, 0, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2dff0"]
 
-[node name="MainWindow" type="Control"]
+[node name="MainWindow" type="Control" unique_id=804440691]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1504,17 +1506,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
+[node name="HSplitContainer" type="HSplitContainer" parent="." unique_id=602224015]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
+split_offsets = PackedInt32Array(640)
 split_offset = 640
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer" unique_id=1622407872]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="ScriptEditor" type="CodeEdit" parent="HSplitContainer/VBoxContainer"]
+[node name="ScriptEditor" type="CodeEdit" parent="HSplitContainer/VBoxContainer" unique_id=1339710417]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/selection_color = Color(0, 0.666667, 1, 0.25098)
@@ -1523,6 +1526,7 @@ theme_override_constants/line_spacing = 6
 theme_override_fonts/font = SubResource("FontVariation_kaosg")
 theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_k87ru")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_1bvp3")
 text = "extends Node
 
 func _ready():
@@ -1548,7 +1552,7 @@ auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
 script = ExtResource("2")
 
-[node name="RunButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+[node name="RunButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor" unique_id=1976695822]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -1562,7 +1566,7 @@ tooltip_text = "Shortcut: Ctrl+Enter or Ctrl+S"
 text = "Run"
 script = ExtResource("3")
 
-[node name="ShareButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+[node name="ShareButton" type="Button" parent="HSplitContainer/VBoxContainer/ScriptEditor" unique_id=492320080]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -1575,19 +1579,19 @@ grow_horizontal = 0
 tooltip_text = "Copies a link to this website to the clipboard with the current code pre-placed."
 text = "Share"
 
-[node name="CopiedTimer" type="Timer" parent="HSplitContainer/VBoxContainer/ScriptEditor"]
+[node name="CopiedTimer" type="Timer" parent="HSplitContainer/VBoxContainer/ScriptEditor" unique_id=331452333]
 one_shot = true
 
-[node name="OutputPanel" type="PanelContainer" parent="HSplitContainer"]
+[node name="OutputPanel" type="PanelContainer" parent="HSplitContainer" unique_id=628157317]
 layout_mode = 2
 theme_override_styles/panel = SubResource("1")
 
-[node name="ErrorLabel" type="Label" parent="HSplitContainer/OutputPanel"]
+[node name="ErrorLabel" type="Label" parent="HSplitContainer/OutputPanel" unique_id=437550006]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_colors/font_color = Color(1, 0.501961, 0.376471, 1)
 
-[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/OutputPanel"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/OutputPanel" unique_id=561437481]
 layout_mode = 2
 focus_mode = 2
 theme_override_colors/selection_color = Color(0, 0.666667, 1, 0.376471)
@@ -1603,7 +1607,7 @@ scroll_following = true
 context_menu_enabled = true
 selection_enabled = true
 
-[node name="EngineVersion" type="Label" parent="."]
+[node name="EngineVersion" type="Label" parent="." unique_id=615685118]
 modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 0
 anchor_left = 1.0

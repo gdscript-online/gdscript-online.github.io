@@ -5,7 +5,7 @@ on:
       - master
 
 env:
-  GODOT_VERSION: 4.5.1
+  GODOT_VERSION: 4.6
   EXPORT_NAME: gdscript-online
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     name: Export (Web)
     runs-on: ubuntu-24.04
     container:
-      image: barichello/godot-ci:4.5.1
+      image: barichello/godot-ci:4.6
     steps:
       - name: Checkout
         uses: actions/checkout@v4
